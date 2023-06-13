@@ -34,6 +34,28 @@ module.exports = {
 				createdAt: "2023-06-07 12:37:57",
 				updatedAt: "2023-06-07 12:37:57",
 			},
+			{
+				name: "nvb",
+				email: "nvb@gmail.com",
+				password:
+					"$2a$15$hO5xB5x3e8SKMHxd6MXvXO2Nw13m/GQycHhE8tnTeQOMT70LgE.Ey",
+				phoneNumber: "0123456789",
+				userType: "CLIENT",
+				avatar: "https://gravatar.com/avatar/ccebc1fc4e69c94fb6f5a6e85bec4aad",
+				createdAt: "2023-06-13 11:56:04",
+				updatedAt: "2023-06-13 11:56:04",
+			},
+			{
+				name: "nvc",
+				email: "nvc@gmail.com",
+				password:
+					"$2a$15$blyC6WbHC0Ae/2p64gxW3ejjx7.7pPfcVcksI.1.raJl.u03mG5su",
+				phoneNumber: "0123456789",
+				userType: "CLIENT",
+				avatar: "https://gravatar.com/avatar/85b92307df5fca6cc0579994e545fec1",
+				createdAt: "2023-06-13 11:56:12",
+				updatedAt: "2023-06-13 11:56:12",
+			},
 		]);
 	},
 

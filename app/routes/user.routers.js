@@ -25,6 +25,7 @@ userRouter.post("/register", checkUserRegister, register);
 userRouter.post("/login", login);
 userRouter.get("/get-all-user", getAllUser);
 userRouter.get("/find-user", findUser);
+
 userRouter.get("/get-user-by-id/:id", checkExist(User, "user"), getUserById);
 userRouter.put(
 	"/update-user/:id",

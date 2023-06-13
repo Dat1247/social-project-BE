@@ -14,7 +14,9 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	}
 	Friend.init(
-		{},
+		{
+			isFriend: DataTypes.BOOLEAN,
+		},
 		{
 			sequelize,
 			modelName: "Friend",

@@ -23,6 +23,9 @@ module.exports = {
 					key: "id",
 				},
 			},
+			isFriend: {
+				type: Sequelize.BOOLEAN,
+			},
 			createdAt: {
 				allowNull: false,
 				type: Sequelize.DATE,
