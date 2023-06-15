@@ -18,8 +18,13 @@ const getAllFriendRequest = async (req, res) => {
 	const { userId } = req.body;
 	try {
 		const [result] = await sequelize.query(`
-			SELECT * FROM Friends
-			WHERE Friends.userID = ${userId} AND (Friends.isFriend = false OR Friends.isFriend IS NULL)
+		SELECT Friends.id as requestID, Friends.userID as userSendID, Friends.friendID as userReceiveID, Friends.isFriend, Friends.createdAt, Friends.updatedAt, 
+			userSend.name as userSendName, userSend.email as userSendEmail, userSend.phoneNumber as userSendPhone, userSend.avatar as userSendAvatar,
+			userReceive.name as userReceiveName, userReceive.email as userReceiveEmail, userReceive.phoneNumber as userReceivePhone, userReceive.avatar as userReceiveAvatar
+			FROM Friends
+		INNER JOIN Users AS userSend ON userSend.id = Friends.userID
+		INNER JOIN Users AS userReceive ON userReceive.id = Friends.friendID
+		WHERE Friends.userID = ${userId} AND (Friends.isFriend = false OR Friends.isFriend IS NULL)
 		`);
 
 		res.status(200).send({
@@ -31,17 +36,31 @@ const getAllFriendRequest = async (req, res) => {
 	}
 };
 
-const acceptFriend = async (req, res) => {};
-
-const rejectFriend = async (req, res) => {
+const answerFriendRequest = async (req, res) => {
 	const { id } = req.params;
+	const { isAccept } = req.body;
 	try {
-		await Friend.destroy({
-			where: {
-				id,
-			},
-		});
-		res.status(200).send("You declined the friend request!");
+		if (isAccept) {
+			const friendRequest = await Friend.findOne({
+				where: {
+					id,
+				},
+			});
+
+			friendRequest.isFriend = true;
+			await friendRequest.save();
+			res.status(200).send({
+				message: "You accepted the request!",
+				data: friendRequest,
+			});
+		} else {
+			await Friend.destroy({
+				where: {
+					id,
+				},
+			});
+			res.status(200).send("You declined the friend request!");
+		}
 	} catch (err) {
 		res.status(500).send(err);
 	}
@@ -50,6 +69,5 @@ const rejectFriend = async (req, res) => {
 module.exports = {
 	sendFriendRequest,
 	getAllFriendRequest,
-	acceptFriend,
-	rejectFriend,
+	answerFriendRequest,
 };
