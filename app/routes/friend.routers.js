@@ -2,16 +2,29 @@ const express = require("express");
 const { Friend } = require("../../models");
 const {
 	sendFriendRequest,
-	getAllFriendRequest,
-
+	getAllFriendRequestByUserSendId,
 	answerFriendRequest,
+	getAllFriendRequest,
+	deleteFriend,
 } = require("../controllers/friend.controllers");
 const { checkExist } = require("../middlewares/validations/checkExist");
+const {
+	checkFriendRequest,
+} = require("../middlewares/validations/checkFriendRequest");
 
 const friendRouter = express.Router();
 
-friendRouter.post("/send-friend-request", sendFriendRequest);
-friendRouter.get("/get-all-friend-request", getAllFriendRequest);
+friendRouter.get("/get-all-request", getAllFriendRequest);
+friendRouter.post(
+	"/send-friend-request",
+	checkFriendRequest,
+	sendFriendRequest
+);
+friendRouter.get(
+	"/get-friend-request-by-user-id",
+	getAllFriendRequestByUserSendId
+);
+friendRouter.delete("/delete-friend", deleteFriend);
 friendRouter.put(
 	"/answer-request/:id",
 	checkExist(Friend, "friend request"),

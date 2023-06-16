@@ -1,6 +1,15 @@
 const { sequelize, Friend } = require("../../models");
 const { Op } = require("sequelize");
 
+const getAllFriendRequest = async (req, res) => {
+	try {
+		const listFriendRequest = await Friend.findAll();
+		res.status(200).send(listFriendRequest);
+	} catch (err) {
+		res.status(500).send(err);
+	}
+};
+
 const sendFriendRequest = async (req, res) => {
 	const { userSendId, userReceiveId } = req.body;
 	try {
@@ -14,7 +23,7 @@ const sendFriendRequest = async (req, res) => {
 	}
 };
 
-const getAllFriendRequest = async (req, res) => {
+const getAllFriendRequestByUserSendId = async (req, res) => {
 	const { userId } = req.body;
 	try {
 		const [result] = await sequelize.query(`
@@ -66,8 +75,36 @@ const answerFriendRequest = async (req, res) => {
 	}
 };
 
+const deleteFriend = async (req, res) => {
+	const { userID, friendID } = req.body;
+
+	try {
+		await Friend.destroy({
+			where: {
+				[Op.or]: [
+					{
+						userID: userID,
+						friendID: friendID,
+					},
+					{
+						userID: friendID,
+						friendID: userID,
+					},
+				],
+			},
+		});
+		res.status(200).send({
+			message: "Delete friend successfully!",
+		});
+	} catch (err) {
+		res.status(500).send(err);
+	}
+};
+
 module.exports = {
-	sendFriendRequest,
 	getAllFriendRequest,
+	sendFriendRequest,
+	getAllFriendRequestByUserSendId,
 	answerFriendRequest,
+	deleteFriend,
 };
