@@ -30,6 +30,7 @@ userRouter.get("/get-user-by-id/:id", checkExist(User, "user"), getUserById);
 userRouter.put(
 	"/update-user/:id",
 	authenticate,
+	checkExist(User, "user"),
 	updateUser,
 	authorize(["ADMIN", "SUPER_ADMIN"]),
 	updateUserAndType
