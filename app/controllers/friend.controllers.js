@@ -27,17 +27,36 @@ const getAllFriendRequestByUserSendId = async (req, res) => {
 	const { userId } = req.body;
 	try {
 		const [result] = await sequelize.query(`
-		SELECT Friends.id as requestID, Friends.userID as userSendID, Friends.friendID as userReceiveID, Friends.isFriend, Friends.createdAt, Friends.updatedAt, 
-			userSend.name as userSendName, userSend.email as userSendEmail, userSend.phoneNumber as userSendPhone, userSend.avatar as userSendAvatar,
-			userReceive.name as userReceiveName, userReceive.email as userReceiveEmail, userReceive.phoneNumber as userReceivePhone, userReceive.avatar as userReceiveAvatar
+		SELECT Friends.id AS requestID, Friends.userID AS userSendID, Friends.friendID AS userReceiveID, Friends.isFriend, Friends.createdAt, Friends.updatedAt,
+			userReceive.name AS userReceiveName, userReceive.email AS userReceiveEmail, userReceive.phoneNumber AS userReceivePhone, userReceive.avatar AS userReceiveAvatar
 			FROM Friends
-		INNER JOIN Users AS userSend ON userSend.id = Friends.userID
 		INNER JOIN Users AS userReceive ON userReceive.id = Friends.friendID
 		WHERE Friends.userID = ${userId} AND (Friends.isFriend = false OR Friends.isFriend IS NULL)
 		`);
 
 		res.status(200).send({
 			message: "Get friend request successfully!",
+			data: result,
+		});
+	} catch (err) {
+		res.status(500).send(err);
+	}
+};
+
+const getListFriendByUserId = async (req, res) => {
+	const { userId } = req.body;
+
+	try {
+		const [result] = await sequelize.query(`
+		SELECT Friends.id AS requestID, Friends.userID AS userSendID, Friends.friendID AS userReceiveID, Friends.isFriend, Friends.createdAt, Friends.updatedAt,
+			friend.name AS friendName, friend.email AS friendEmail, friend.phoneNumber AS friendPhone, friend.avatar AS friendAvatar
+			FROM Friends
+		INNER JOIN Users AS friend ON friend.id = Friends.friendID
+		WHERE Friends.userID = ${userId} AND Friends.isFriend = true
+		`);
+
+		res.status(200).send({
+			message: "Get list friend successfully!",
 			data: result,
 		});
 	} catch (err) {
@@ -105,6 +124,7 @@ module.exports = {
 	getAllFriendRequest,
 	sendFriendRequest,
 	getAllFriendRequestByUserSendId,
+	getListFriendByUserId,
 	answerFriendRequest,
 	deleteFriend,
 };
