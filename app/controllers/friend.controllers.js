@@ -120,6 +120,22 @@ const deleteFriend = async (req, res) => {
 	}
 };
 
+const deleteFriendRequest = async (req, res) => {
+	const { id } = req.params;
+	try {
+		await Friend.destroy({
+			where: {
+				id,
+			},
+		});
+		res.status(200).send({
+			message: "Delete friend request successfully!",
+		});
+	} catch (err) {
+		res.status(500).send(err);
+	}
+};
+
 module.exports = {
 	getAllFriendRequest,
 	sendFriendRequest,
@@ -127,4 +143,5 @@ module.exports = {
 	getListFriendByUserId,
 	answerFriendRequest,
 	deleteFriend,
+	deleteFriendRequest,
 };
