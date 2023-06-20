@@ -41,6 +41,7 @@ friendRouter.put(
 );
 friendRouter.delete(
 	"/delete-friend-request/:id",
+	authenticate,
 	checkExist(Friend, "friend request"),
 	authorize(ARRAY_AUTHORS),
 	deleteFriendRequest
