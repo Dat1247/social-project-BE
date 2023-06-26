@@ -2,27 +2,17 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable("Posts", {
+		await queryInterface.createTable("viewModes", {
 			id: {
 				allowNull: false,
 				autoIncrement: true,
 				primaryKey: true,
 				type: Sequelize.INTEGER,
 			},
-			userID: {
-				type: Sequelize.INTEGER,
-				references: {
-					model: "Users",
-					key: "id",
-				},
-			},
-			content: {
+			value: {
 				type: Sequelize.STRING,
 			},
-			fileUpload: {
-				type: Sequelize.JSON,
-			},
-			viewMode: {
+			description: {
 				type: Sequelize.STRING,
 			},
 			createdAt: {
@@ -36,6 +26,6 @@ module.exports = {
 		});
 	},
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable("Posts");
+		await queryInterface.dropTable("viewModes");
 	},
 };
