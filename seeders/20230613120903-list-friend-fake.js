@@ -34,8 +34,8 @@ module.exports = {
 				{
 					userID: 2,
 					friendID: 3,
-					createdAt: "2023-06-13T12:18:49.000Z",
-					updatedAt: "2023-06-13T12:18:49.000Z",
+					createdAt: "2023-06-13 20:00:00",
+					updatedAt: "2023-06-13 20:00:00",
 				},
 			],
 			{}

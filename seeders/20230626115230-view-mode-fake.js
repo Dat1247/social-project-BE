@@ -9,20 +9,20 @@ module.exports = {
 				{
 					value: "Everyone",
 					description: "All people will see your post",
-					createdAt: "2023-06-13T12:18:49.000Z",
-					updatedAt: "2023-06-13T12:18:49.000Z",
+					createdAt: "2023-06-13 20:00:00",
+					updatedAt: "2023-06-13 20:00:00",
 				},
 				{
 					value: "Friend",
 					description: "Only your friend can see your post",
-					createdAt: "2023-06-13T12:18:49.000Z",
-					updatedAt: "2023-06-13T12:18:49.000Z",
+					createdAt: "2023-06-13 20:00:00",
+					updatedAt: "2023-06-13 20:00:00",
 				},
 				{
 					value: "Only me",
 					description: "Only you can see your post",
-					createdAt: "2023-06-13T12:18:49.000Z",
-					updatedAt: "2023-06-13T12:18:49.000Z",
+					createdAt: "2023-06-13 20:00:00",
+					updatedAt: "2023-06-13 20:00:00",
 				},
 			],
 			{}
