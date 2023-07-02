@@ -24,6 +24,7 @@ module.exports = {
 			},
 			viewMode: {
 				type: Sequelize.STRING,
+				defaultValue: "Everyone",
 			},
 			createdAt: {
 				allowNull: false,

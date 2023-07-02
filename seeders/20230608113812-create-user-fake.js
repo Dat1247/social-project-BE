@@ -6,6 +6,7 @@ module.exports = {
 		await queryInterface.bulkInsert("Users", [
 			{
 				name: "admin",
+				username: "admin",
 				email: "admin@gmail.com",
 				password:
 					"$2a$15$YNlVk4XT43QIqPhqpTwn3u2oFrMfx7DOECSkClQDZb6C4eDQ5bv5y",
@@ -17,6 +18,7 @@ module.exports = {
 			},
 			{
 				name: "nva",
+				username: "nva",
 				email: "nva@gmail.com",
 				password: "$15$hhpQ5C3lTy3RNSqIG220AuFM3211TLBxm80yvJjdMqOaNN2KlD2Pu",
 				phoneNumber: "0123456789",
@@ -27,6 +29,7 @@ module.exports = {
 			},
 			{
 				name: "nvb",
+				username: "nvb",
 				email: "nvb@gmail.com",
 				password:
 					"$2a$15$hO5xB5x3e8SKMHxd6MXvXO2Nw13m/GQycHhE8tnTeQOMT70LgE.Ey",
@@ -38,6 +41,7 @@ module.exports = {
 			},
 			{
 				name: "nvc",
+				username: "nvc",
 				email: "nvc@gmail.com",
 				password:
 					"$2a$15$blyC6WbHC0Ae/2p64gxW3ejjx7.7pPfcVcksI.1.raJl.u03mG5su",
