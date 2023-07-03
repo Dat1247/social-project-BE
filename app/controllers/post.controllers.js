@@ -1,5 +1,17 @@
 const { Post } = require("../../models");
 
+const getPost = async (req, res) => {
+	const { user } = req;
+
+	console.log({ user });
+	try {
+		const result = await Post.findAll();
+		res.status(200).send(result);
+	} catch (err) {
+		res.status(500).send(err);
+	}
+};
+
 const createPost = async (req, res) => {
 	const { content, viewMode } = req.body;
 	const { user, files } = req;
@@ -23,4 +35,4 @@ const createPost = async (req, res) => {
 	}
 };
 
-module.exports = { createPost };
+module.exports = { createPost, getPost };
