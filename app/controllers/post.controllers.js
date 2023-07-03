@@ -1,12 +1,19 @@
 const { Post } = require("../../models");
 
 const createPost = async (req, res) => {
-	const { content, fileUpload, viewMode } = req.body;
-	const { user } = req;
+	const { content, viewMode } = req.body;
+	const { user, files } = req;
+	const fileArray = [];
 	try {
+		if (files.length > 0) {
+			files.forEach((file) => {
+				const pathName = `${file.destination}/${file.filename}`;
+				fileArray.push(pathName);
+			});
+		}
 		const newPost = await Post.create({
 			content,
-			fileUpload,
+			fileUpload: fileArray,
 			viewMode,
 			userID: user.id,
 		});
