@@ -51,6 +51,30 @@ module.exports = {
 				createdAt: "2023-06-13 11:56:12",
 				updatedAt: "2023-06-13 11:56:12",
 			},
+			{
+				name: "nvd",
+				username: "nvd",
+				email: "nvd@gmail.com",
+				password:
+					"$2a$15$hO5xB5x3e8SKMHxd6MXvXO2Nw13m/GQycHhE8tnTeQOMT70LgE.Ey",
+				phoneNumber: "0123456789",
+				userType: "CLIENT",
+				avatar: "https://gravatar.com/avatar/ccebc1fc4e69c94fb6f5a6e85bec4aad",
+				createdAt: "2023-06-13 11:56:04",
+				updatedAt: "2023-06-13 11:56:04",
+			},
+			{
+				name: "nve",
+				username: "nve",
+				email: "nve@gmail.com",
+				password:
+					"$2a$15$hO5xB5x3e8SKMHxd6MXvXO2Nw13m/GQycHhE8tnTeQOMT70LgE.Ey",
+				phoneNumber: "0123456789",
+				userType: "CLIENT",
+				avatar: "https://gravatar.com/avatar/ccebc1fc4e69c94fb6f5a6e85bec4aad",
+				createdAt: "2023-06-13 11:56:04",
+				updatedAt: "2023-06-13 11:56:04",
+			},
 		]);
 	},
 

@@ -1,11 +1,23 @@
 const express = require("express");
-const { createPost, getPost } = require("../controllers/post.controllers");
+const { Post } = require("../../models");
+const {
+	createPost,
+	getPost,
+	deletePostById,
+} = require("../controllers/post.controllers");
 const { authenticate } = require("../middlewares/auth/authenticate");
 const { uploadFile } = require("../middlewares/upload/uploadFile");
+const { checkExist } = require("../middlewares/validations/checkExist");
 
 const postRouter = express.Router();
 
 postRouter.get("/", authenticate, getPost);
 postRouter.post("/create-post", authenticate, uploadFile("myFile"), createPost);
+postRouter.delete(
+	"/:id",
+	authenticate,
+	checkExist(Post, "post"),
+	deletePostById
+);
 
 module.exports = { postRouter };

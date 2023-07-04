@@ -35,4 +35,23 @@ const createPost = async (req, res) => {
 	}
 };
 
-module.exports = { createPost, getPost };
+const deletePostById = async (req, res) => {
+	const { item, user } = req;
+
+	try {
+		// await Post.destroy({
+		// 	where: {
+		// 		id: item.id,
+		// 	},
+		// });
+		res.status(200).send({
+			message: "Delete post successfully!",
+			authenticate: user,
+			post: item,
+		});
+	} catch (err) {
+		res.status(500).send(err);
+	}
+};
+
+module.exports = { createPost, getPost, deletePostById };

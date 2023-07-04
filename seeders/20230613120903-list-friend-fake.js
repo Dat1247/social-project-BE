@@ -22,6 +22,7 @@ module.exports = {
 				{
 					userID: 1,
 					friendID: 4,
+					isFriend: true,
 					createdAt: "2023-06-13 20:00:00",
 					updatedAt: "2023-06-13 20:00:00",
 				},
@@ -34,6 +35,20 @@ module.exports = {
 				{
 					userID: 2,
 					friendID: 3,
+					createdAt: "2023-06-13 20:00:00",
+					updatedAt: "2023-06-13 20:00:00",
+				},
+				{
+					userID: 5,
+					friendID: 1,
+					isFriend: true,
+					createdAt: "2023-06-13 20:00:00",
+					updatedAt: "2023-06-13 20:00:00",
+				},
+				{
+					userID: 5,
+					friendID: 6,
+					isFriend: true,
 					createdAt: "2023-06-13 20:00:00",
 					updatedAt: "2023-06-13 20:00:00",
 				},
