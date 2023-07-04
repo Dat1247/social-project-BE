@@ -8,6 +8,7 @@ const {
 const { authenticate } = require("../middlewares/auth/authenticate");
 const { uploadFile } = require("../middlewares/upload/uploadFile");
 const { checkExist } = require("../middlewares/validations/checkExist");
+const { checkIsYour } = require("../middlewares/validations/checkIsYour");
 
 const postRouter = express.Router();
 
@@ -17,6 +18,7 @@ postRouter.delete(
 	"/:id",
 	authenticate,
 	checkExist(Post, "post"),
+	checkIsYour,
 	deletePostById
 );
 

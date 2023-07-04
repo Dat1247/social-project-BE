@@ -39,14 +39,13 @@ const deletePostById = async (req, res) => {
 	const { item, user } = req;
 
 	try {
-		// await Post.destroy({
-		// 	where: {
-		// 		id: item.id,
-		// 	},
-		// });
+		await Post.destroy({
+			where: {
+				id: item.id,
+			},
+		});
 		res.status(200).send({
 			message: "Delete post successfully!",
-			authenticate: user,
 			post: item,
 		});
 	} catch (err) {

@@ -6,7 +6,6 @@ const authenticate = (req, res, next) => {
 
 	try {
 		const decode = jwt.verify(token, SECRET_KEY);
-
 		if (decode) {
 			req.user = decode;
 			return next();
