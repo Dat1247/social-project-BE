@@ -1,4 +1,4 @@
-const { Post } = require("../../models");
+const { sequelize, Post } = require("../../models");
 
 const getPost = async (req, res) => {
 	const { user } = req;
@@ -11,6 +11,38 @@ const getPost = async (req, res) => {
 		res.status(500).send(err);
 	}
 };
+
+const testGetPost = async (req, res) => {
+	let arrPost = []
+	try {
+		const [result1] = await sequelize.query(`
+			SELECT Posts.id AS PostID, Posts.content AS content, Posts.userID AS Author_Id, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, 
+			Posts.createdAt, Posts.updatedAt FROM Posts
+			INNER JOIN Friends AS friend
+			ON (friend.userID = "1" && friend.friendID = Posts.userID && friend.isFriend = '1' AND Posts.viewMode = "Friend") 
+			|| (friend.friendID = "1" && friend.userID = Posts.userID && friend.isFriend = '1' AND Posts.viewMode = "Friend");
+		`);
+
+		const [result2] = await sequelize.query(`
+			SELECT  Posts.id AS PostID, Posts.content AS content, Posts.userID AS Author_Id, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, 
+			Posts.createdAt, Posts.updatedAt FROM Posts
+			WHERE (Posts.viewMode = 'Everyone') 
+			|| (Posts.viewMode = 'Only me' && Posts.userID = '1') 
+			|| (Posts.viewMode = 'Friend' && Posts.userID = '1');
+		`);
+
+		arrPost = [...result1, ...result2]
+		arrPost.sort((a,b) => {
+			return b.createdAt - a.createdAt;
+		})
+
+		console.log({arrPost})
+
+		res.status(200).send(arrPost)
+	} catch(err) {
+		res.status(500).send(err);
+	}
+}
 
 const createPost = async (req, res) => {
 	const { content, viewMode } = req.body;
@@ -53,4 +85,4 @@ const deletePostById = async (req, res) => {
 	}
 };
 
-module.exports = { createPost, getPost, deletePostById };
+module.exports = { createPost, getPost, deletePostById, testGetPost };

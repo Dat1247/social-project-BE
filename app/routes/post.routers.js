@@ -4,6 +4,7 @@ const {
 	createPost,
 	getPost,
 	deletePostById,
+	testGetPost
 } = require("../controllers/post.controllers");
 const { authenticate } = require("../middlewares/auth/authenticate");
 const { uploadFile } = require("../middlewares/upload/uploadFile");
@@ -12,7 +13,7 @@ const { checkIsYour } = require("../middlewares/validations/checkIsYour");
 
 const postRouter = express.Router();
 
-postRouter.get("/", authenticate, getPost);
+postRouter.get("/", authenticate, testGetPost);
 postRouter.post("/create-post", authenticate, uploadFile("myFile"), createPost);
 postRouter.delete(
 	"/:id",
