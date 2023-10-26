@@ -17,7 +17,7 @@ const postRouter = express.Router();
 postRouter.get("/get-all-posts", getAllPosts)
 postRouter.get("/", authenticate, getPosts);
 postRouter.post("/create-post", authenticate, uploadFile("myFile"), createPost);
-postRouter.put("/update-post/:id", authenticate, checkExist(Post, "post"), checkIsYour, updatePost)
+postRouter.put("/update-post/:id", authenticate, checkExist(Post, "post"), checkIsYour,uploadFile("myFile"), updatePost)
 postRouter.delete(
 	"/:id",
 	authenticate,

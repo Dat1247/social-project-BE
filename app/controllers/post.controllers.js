@@ -64,12 +64,25 @@ const createPost = async (req, res) => {
 };
 
 const updatePost = async (req, res) => {
-	const {item, user} = req;
+	const {item, files} = req;
 	const { content, viewMode } = req.body;
 
+	const fileArray = []
+
 	try {
+		if (files.length > 0) {
+			files.forEach((file) => {
+				const pathName = `${file.destination}/${file.filename}`;
+				fileArray.push(pathName);
+			});
+		}
+
+		if(fileArray.length > 0) {
+			item.fileUpload = fileArray;
+		}
 		item.content = content;
 		item.viewMode = viewMode;
+
 		await item.save();
 
 		res.status(200).send({
