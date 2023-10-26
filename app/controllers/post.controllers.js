@@ -1,9 +1,7 @@
 const { sequelize, Post } = require("../../models");
 
-const getPost = async (req, res) => {
+const getAllPosts = async (req, res) => {
 	const { user } = req;
-
-	console.log({ user });
 	try {
 		const result = await Post.findAll();
 		res.status(200).send(result);
@@ -12,7 +10,7 @@ const getPost = async (req, res) => {
 	}
 };
 
-const testGetPost = async (req, res) => {
+const getPosts = async (req, res) => {
 	let arrPost = []
 	try {
 		const [result1] = await sequelize.query(`
@@ -35,8 +33,6 @@ const testGetPost = async (req, res) => {
 		arrPost.sort((a,b) => {
 			return b.createdAt - a.createdAt;
 		})
-
-		console.log({arrPost})
 
 		res.status(200).send(arrPost)
 	} catch(err) {
@@ -67,6 +63,25 @@ const createPost = async (req, res) => {
 	}
 };
 
+const updatePost = async (req, res) => {
+	const {item, user} = req;
+	const { content, viewMode } = req.body;
+
+	try {
+		item.content = content;
+		item.viewMode = viewMode;
+		await item.save();
+
+		res.status(200).send({
+			message: "Update post successfully!",
+			data: item,
+		});
+	} catch (err) {
+		res.status(500).send("Update post failed!")
+	}
+
+}
+
 const deletePostById = async (req, res) => {
 	const { item, user } = req;
 
@@ -85,4 +100,4 @@ const deletePostById = async (req, res) => {
 	}
 };
 
-module.exports = { createPost, getPost, deletePostById, testGetPost };
+module.exports = { createPost, deletePostById, getPosts, updatePost, getAllPosts };

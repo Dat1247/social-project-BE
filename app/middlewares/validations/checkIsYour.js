@@ -1,6 +1,5 @@
 const checkIsYour = async (req, res, next) => {
 	const { item, user } = req;
-
 	if (item.userID === user.id) {
 		next();
 	} else {
