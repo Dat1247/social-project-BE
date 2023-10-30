@@ -51,6 +51,25 @@ const getCommentsOfPost = async (req, res) => {
     }
 }
 
+const updateComment = async (req, res) => {
+    const {user, item} = req;
+    const {content} = req.body;
+
+
+    try {
+        item.content = content;
+        
+        await item.save();
+
+        res.status(200).send({
+            message: 'Comment updated successfully!',
+            data: item
+        })
+    } catch(err){
+        res.status(500).send(err);
+    }
+}
+
 const deleteComment = async (req, res) => {
     const {item} = req;
     try {
@@ -73,5 +92,6 @@ module.exports = {
     createComment,
     getAllComments,
     getCommentsOfPost,
+    updateComment,
     deleteComment
 }
