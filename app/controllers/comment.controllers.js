@@ -22,9 +22,37 @@ const createComment = async (req, res) => {
 }
 
 const getAllComments = async (req, res) => {
+    try {
+        const comments = await Comment.findAll();
+        res.status(200).send({
+            message: "Get all comments successfully!",
+            data: comments
+        })
+    } catch(err) {
+        res.status(500).send(err)
+    }
+}
 
+const getCommentsOfPost = async (req, res) => {
+    const {item} = req;
+    console.log({item})
+    try {
+        const comments = await Comment.findAll({
+            where: {
+                postID: item.id
+            }
+        })
+        res.status(200).send({
+            message: `Get all comments of post id = ${item.id} successfully!`,
+            data: comments
+        })
+    } catch(err) {
+        res.status(500).send(err)
+    }
 }
 
 module.exports = {
-    createComment
+    createComment,
+    getAllComments,
+    getCommentsOfPost
 }
