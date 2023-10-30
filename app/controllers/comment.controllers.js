@@ -51,8 +51,27 @@ const getCommentsOfPost = async (req, res) => {
     }
 }
 
+const deleteComment = async (req, res) => {
+    const {item} = req;
+    try {
+        await Comment.destroy({
+            where: {
+                id: item.id,
+            }
+        })
+
+        res.status(200).send({
+            message: "Comment deleted successfully!",
+            data: item
+        })
+    } catch(err) {
+        res.status(500).send(err)
+    }
+}
+
 module.exports = {
     createComment,
     getAllComments,
-    getCommentsOfPost
+    getCommentsOfPost,
+    deleteComment
 }
