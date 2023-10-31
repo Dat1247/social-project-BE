@@ -1,8 +1,8 @@
-const { sequelize, Post, Like } = require("../../models");
+const { sequelize, Post, Like, Comment } = require("../../models");
 const { Op } = require("sequelize");
 
 const getAllPosts = async (req, res) => {
-	const { user } = req;
+
 	try {
 		const result = await Post.findAll();
 		res.status(200).send(result);
@@ -11,9 +11,42 @@ const getAllPosts = async (req, res) => {
 	}
 };
 
+const getCountModelOfPost = async(arr, model) => {
+	let newArr = []
+		for(const item of arr) {
+			const result = await model.count({
+				where: {
+					postID: {
+						[Op.eq]: item.postID
+					}
+				}
+			});
+			newArr.push({...item, numberOfLike: result});
+
+		}
+	return newArr;
+}
+
+const getCountCommentOfPost = async(arr, model) => {
+	let newArr = []
+		for(const item of arr) {
+			const result = await model.count({
+				where: {
+					postID: {
+						[Op.eq]: item.postID
+					}
+				}
+			});
+			newArr.push({...item, numberOfComment: result});
+
+		}
+	return newArr;
+}
+
 const getPosts = async (req, res) => {
-	let arrPost = []
-	let arrPosts = [];
+	let arrPost = [];
+	let newArrPost = []
+
 	try {
 		const [result1] = await sequelize.query(`
 			SELECT Posts.id AS postID, Posts.content AS content, Posts.userID AS Author_Id, Posts.fileUpload AS FileUpload,
@@ -35,22 +68,10 @@ const getPosts = async (req, res) => {
 			return b.createdAt - a.createdAt;
 		})
 
+		newArrPost = await getCountModelOfPost(arrPost, Like);
+		newArrPost = await getCountCommentOfPost(newArrPost, Comment);
 
-
-		arrPost.forEach(async (item, index) => {
-			const numberOfLike = await Like.count({
-				where: {
-					postID: item.postID
-				}
-			})
-
-			arrPosts.push({...item, numberOfLike})
-		})
-
-		// console.log({arrPosts})
-
-
-		res.status(200).send(arrPosts)
+		res.status(200).send(newArrPost)
 	} catch(err) {
 		res.status(500).send(err);
 	}
