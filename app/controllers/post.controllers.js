@@ -49,16 +49,16 @@ const getPosts = async (req, res) => {
 
 	try {
 		const [result1] = await sequelize.query(`
-			SELECT Posts.id AS postID, Posts.content AS content, Posts.userID AS Author_Id, Posts.fileUpload AS FileUpload,
-			 Posts.viewMode AS ViewMode, Posts.createdAt, Posts.updatedAt FROM Posts
+			SELECT Posts.id AS postID, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, Posts.createdAt, Posts.updatedAt, Users.id AS Author_Id, Users.name AS name, Users.username AS username FROM Posts
 			INNER JOIN Friends AS friend
 			ON (friend.userID = "1" && friend.friendID = Posts.userID && friend.isFriend = '1' AND Posts.viewMode = "Friend") 
-			|| (friend.friendID = "1" && friend.userID = Posts.userID && friend.isFriend = '1' AND Posts.viewMode = "Friend");
+			|| (friend.friendID = "1" && friend.userID = Posts.userID && friend.isFriend = '1' AND Posts.viewMode = "Friend")
+			INNER JOIN Users ON Users.id = Posts.userID;
 		`);
 
 		const [result2] = await sequelize.query(`
-			SELECT  Posts.id AS postID, Posts.content AS content, Posts.userID AS Author_Id, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, 
-			Posts.createdAt, Posts.updatedAt FROM Posts
+			SELECT  Posts.id AS postID, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, Posts.createdAt, Posts.updatedAt, Users.id AS Author_Id, Users.name AS name, Users.username AS username FROM Posts
+			INNER JOIN Users ON Users.id = Posts.userID 
 			WHERE (Posts.viewMode = 'Everyone') 
 			|| (Posts.viewMode = 'Only me' && Posts.userID = '1') 
 			|| (Posts.viewMode = 'Friend' && Posts.userID = '1');
