@@ -1,4 +1,4 @@
-const { sequelize, Post, Like, Comment } = require("../../models");
+const { sequelize, Post, Comment } = require("../../models");
 const { Op } = require("sequelize");
 
 const getAllPosts = async (req, res) => {
@@ -10,22 +10,6 @@ const getAllPosts = async (req, res) => {
 		res.status(500).send(err);
 	}
 };
-
-const getCountModelOfPost = async(arr, model) => {
-	let newArr = []
-		for(const item of arr) {
-			const result = await model.count({
-				where: {
-					postID: {
-						[Op.eq]: item.postID
-					}
-				}
-			});
-			newArr.push({...item, numberOfLike: result});
-
-		}
-	return newArr;
-}
 
 const getCountCommentOfPost = async(arr, model) => {
 	let newArr = []
@@ -49,27 +33,30 @@ const getPosts = async (req, res) => {
 
 	try {
 		const [result1] = await sequelize.query(`
-			SELECT Posts.id AS postID, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, Posts.createdAt, Posts.updatedAt, Users.id AS Author_Id, Users.name AS name, Users.username AS username FROM Posts
+			SELECT Posts.id AS postID, Users.id AS Author_Id, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, count(likes.userID) AS likes,  Users.name AS name, Users.username AS username, Posts.createdAt, Posts.updatedAt FROM Posts
 			INNER JOIN Friends AS friend
 			ON (friend.userID = "1" && friend.friendID = Posts.userID && friend.isFriend = '1' AND Posts.viewMode = "Friend") 
 			|| (friend.friendID = "1" && friend.userID = Posts.userID && friend.isFriend = '1' AND Posts.viewMode = "Friend")
-			INNER JOIN Users ON Users.id = Posts.userID;
+			INNER JOIN Users ON Users.id = Posts.userID
+			LEFT JOIN Likes ON Likes.postID = Posts.id
+			GROUP BY Posts.id;
 		`);
 
 		const [result2] = await sequelize.query(`
-			SELECT  Posts.id AS postID, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, Posts.createdAt, Posts.updatedAt, Users.id AS Author_Id, Users.name AS name, Users.username AS username FROM Posts
+			SELECT Posts.id AS postID, Users.id AS Author_Id, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, count(likes.userID) AS likes,  Users.name AS name, Users.username AS username, Posts.createdAt, Posts.updatedAt FROM Posts
 			INNER JOIN Users ON Users.id = Posts.userID 
-			WHERE (Posts.viewMode = 'Everyone') 
+			LEFT JOIN Likes ON Likes.postID = Posts.id
+			WHERE (Posts.viewMode = 'Everyone')
 			|| (Posts.viewMode = 'Only me' && Posts.userID = '1') 
-			|| (Posts.viewMode = 'Friend' && Posts.userID = '1');
+			|| (Posts.viewMode = 'Friend' && Posts.userID = '1')
+			GROUP BY Posts.id;
 		`);
 
 		arrPost = [...result1, ...result2].sort((a,b) => {
 			return b.createdAt - a.createdAt;
 		})
 
-		newArrPost = await getCountModelOfPost(arrPost, Like);
-		newArrPost = await getCountCommentOfPost(newArrPost, Comment);
+		newArrPost = await getCountCommentOfPost(arrPost, Comment);
 
 		res.status(200).send(newArrPost)
 	} catch(err) {
