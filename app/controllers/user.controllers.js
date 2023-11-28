@@ -18,7 +18,7 @@ const getUserType = async (req, res) => {
 };
 
 const register = async (req, res) => {
-	const { name, email, password, phoneNumber, userType } = req.body;
+	const { username, email, password, phoneNumber, userType } = req.body;
 	try {
 		const salt = bcryptjs.genSaltSync(15);
 		const hashPassword = bcryptjs.hashSync(password, salt);
@@ -33,7 +33,7 @@ const register = async (req, res) => {
 
 		if (userType) {
 			const newUser = await User.create({
-				name,
+				username,
 				email,
 				password: hashPassword,
 				phoneNumber,
@@ -46,7 +46,7 @@ const register = async (req, res) => {
 			});
 		} else {
 			const newUser = await User.create({
-				name,
+				username,
 				email,
 				password: hashPassword,
 				phoneNumber,
