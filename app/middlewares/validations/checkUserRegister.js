@@ -10,7 +10,7 @@ const checkUserRegister = async (req, res, next) => {
 	if (!user) {
 		next();
 	} else {
-		res.status(404).send("Email already exists!");
+		res.status(500).send("Email already exists!");
 	}
 };
 
