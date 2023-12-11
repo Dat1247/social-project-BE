@@ -18,7 +18,7 @@ const getUserType = async (req, res) => {
 };
 
 const register = async (req, res) => {
-	const { username, email, password, phoneNumber, userType } = req.body;
+	const { name,username, email, password, phoneNumber, userType } = req.body;
 	try {
 		const salt = bcryptjs.genSaltSync(15);
 		const hashPassword = bcryptjs.hashSync(password, salt);
@@ -33,6 +33,7 @@ const register = async (req, res) => {
 
 		if (userType) {
 			const newUser = await User.create({
+				name,
 				username,
 				email,
 				password: hashPassword,
@@ -46,6 +47,7 @@ const register = async (req, res) => {
 			});
 		} else {
 			const newUser = await User.create({
+				name,
 				username,
 				email,
 				password: hashPassword,
@@ -81,6 +83,8 @@ const login = async (req, res) => {
 					phoneNumber: user.phoneNumber,
 					email: user.email,
 					userType: user.userType,
+					createdAt: user.createdAt,
+					updatedAt: user.updatedAt
 				},
 				SECRET_KEY,
 				{}
@@ -105,6 +109,27 @@ const login = async (req, res) => {
 	} else {
 		res.status(404).send("Email or password incorrect!");
 	}
+};
+
+const getProfile = async (req, res) => {
+	const token = req.header("Authorization").replace("Bearer ", "");
+
+	try {
+		const decode = jwt.verify(token, SECRET_KEY);
+
+		if (decode) {
+			res.status(200).send({
+				message: "Get your profile successfully!",
+				data: decode
+			})
+		} else {
+			res.status(401).send("You are not authorized to do this!");
+		}
+
+	} catch(err) {
+		res.status(403).send("You must log in!");
+	}
+
 };
 
 const getAllUser = async (req, res) => {
@@ -220,6 +245,7 @@ module.exports = {
 	getAllUser,
 	getUserById,
 	login,
+	getProfile,
 	findUser,
 	updateUser,
 	updateUserAndType,

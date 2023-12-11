@@ -10,6 +10,7 @@ const {
 	getUserById,
 	updateUserAndType,
 	deleteUser,
+	getProfile,
 } = require("../controllers/user.controllers");
 const {
 	checkUserRegister,
@@ -32,6 +33,7 @@ userRouter.get(
 	checkExist(User, "user"),
 	getUserById
 );
+userRouter.get("/get-profile", getProfile);
 userRouter.put(
 	"/update-user/:id",
 	authenticate,

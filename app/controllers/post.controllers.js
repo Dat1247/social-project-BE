@@ -137,4 +137,21 @@ const deletePostById = async (req, res) => {
 	}
 };
 
-module.exports = { createPost, deletePostById, getPosts, updatePost, getAllPosts };
+const changeStatusPost = async (req, res) => {
+	const {item} = req;
+	const {viewMode} = req.body;
+
+	try {
+		item.viewMode = viewMode;
+		await item.save();
+
+		res.status(200).send({
+			message: "Update status post successfully!",
+			data: item,
+		})
+	} catch (err) {
+		res.status(500).send("Can't change status of post!");
+	}
+}
+
+module.exports = { createPost, deletePostById, getPosts, updatePost, getAllPosts, changeStatusPost };
