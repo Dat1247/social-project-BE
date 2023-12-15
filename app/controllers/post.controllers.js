@@ -53,7 +53,7 @@ const getPosts = async (req, res) => {
 		`);
 
 		arrPost = [...result1, ...result2].sort((a,b) => {
-			return b.createdAt - a.createdAt;
+			return b.updatedAt - a.updatedAt;
 		})
 
 		newArrPost = await getCountCommentOfPost(arrPost, Comment);
