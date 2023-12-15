@@ -14,7 +14,7 @@ const uploadFile = (type) => {
 	const upload = multer({
 		storage: storage,
 		fileFilter: function (req, file, cb) {
-			const extensionImageList = [".mp4", ".ogg", ".png", ".jpg"];
+			const extensionImageList = [".mp4", ".ogg", ".png", ".jpg", ".PNG", ".JPG"];
 			const extension = file.originalname.slice(-4);
 			const check = extensionImageList.includes(extension);
 			if (check) {
