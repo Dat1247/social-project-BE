@@ -44,7 +44,8 @@ const likeAPost = async (req, res) => {
             });
 
             res.status(200).send({
-                message: "Like's canceled successfully!"
+                message: "Like's canceled successfully!",
+		isLike: false
             })
         } else {
             const data = await Like.create({
@@ -54,6 +55,7 @@ const likeAPost = async (req, res) => {
 
             res.status(200).send({
                 message: "Like post has been created successfully!",
+		isLike: true,
                 data: data
             })
         }

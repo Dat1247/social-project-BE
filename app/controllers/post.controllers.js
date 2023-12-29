@@ -35,8 +35,8 @@ const getPosts = async (req, res) => {
 		const [result1] = await sequelize.query(`
 			SELECT Posts.id AS postID, Users.id AS Author_Id, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, count(likes.userID) AS likes,  Users.name AS name, Users.username AS username, Posts.createdAt, Posts.updatedAt FROM Posts
 			INNER JOIN Friends AS friend
-			ON (friend.userID = "1" && friend.friendID = Posts.userID && friend.isFriend = '1' AND Posts.viewMode = "Friend") 
-			|| (friend.friendID = "1" && friend.userID = Posts.userID && friend.isFriend = '1' AND Posts.viewMode = "Friend")
+			ON (friend.userID = "1" && friend.friendID = Posts.userID && friend.isFriend = '1' AND (Posts.viewMode = "Friend" || Posts.viewMode = "friends")) 
+			|| (friend.friendID = "1" && friend.userID = Posts.userID && friend.isFriend = '1' AND (Posts.viewMode = "Friend" || Posts.viewMode = "friends"))
 			INNER JOIN Users ON Users.id = Posts.userID
 			LEFT JOIN Likes ON Likes.postID = Posts.id
 			GROUP BY Posts.id;
@@ -48,7 +48,7 @@ const getPosts = async (req, res) => {
 			LEFT JOIN Likes ON Likes.postID = Posts.id
 			WHERE (Posts.viewMode = 'Everyone')
 			|| (Posts.viewMode = 'Only me' && Posts.userID = '1') 
-			|| (Posts.viewMode = 'Friend' && Posts.userID = '1')
+			|| ((Posts.viewMode = "Friend" || Posts.viewMode = "friends") && Posts.userID = '1')
 			GROUP BY Posts.id;
 		`);
 
