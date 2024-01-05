@@ -64,6 +64,16 @@ const getPosts = async (req, res) => {
 	}
 }
 
+const getPostById = async (req, res) => {
+	const {item} = req;
+
+	try {
+		res.status(200).send(item)
+	} catch(err) {
+		res.status(500).send(err);
+	}
+}
+
 const createPost = async (req, res) => {
 	const { content, viewMode } = req.body;
 	const { user, files } = req;
@@ -154,4 +164,4 @@ const changeStatusPost = async (req, res) => {
 	}
 }
 
-module.exports = { createPost, deletePostById, getPosts, updatePost, getAllPosts, changeStatusPost };
+module.exports = { createPost, deletePostById, getPosts, updatePost, getAllPosts, changeStatusPost, getPostById };
