@@ -33,7 +33,7 @@ const getPosts = async (req, res) => {
 
 	try {
 		const [result1] = await sequelize.query(`
-			SELECT Posts.id AS postID, Users.id AS Author_Id, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, count(likes.userID) AS likes,  Users.name AS name, Users.username AS username, Posts.createdAt, Posts.updatedAt FROM Posts
+			SELECT Posts.id AS postID, Users.id AS Author_Id, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, count(likes.userID) AS numberOfLike,  Users.name AS authorName, Users.username AS authorUsername, Users.avatar AS authorAvatar, Posts.createdAt, Posts.updatedAt FROM Posts
 			INNER JOIN Friends AS friend
 			ON (friend.userID = "1" && friend.friendID = Posts.userID && friend.isFriend = '1' AND (Posts.viewMode = "Friend" || Posts.viewMode = "friends")) 
 			|| (friend.friendID = "1" && friend.userID = Posts.userID && friend.isFriend = '1' AND (Posts.viewMode = "Friend" || Posts.viewMode = "friends"))
@@ -43,7 +43,7 @@ const getPosts = async (req, res) => {
 		`);
 
 		const [result2] = await sequelize.query(`
-			SELECT Posts.id AS postID, Users.id AS Author_Id, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, count(likes.userID) AS likes,  Users.name AS name, Users.username AS username, Posts.createdAt, Posts.updatedAt FROM Posts
+			SELECT Posts.id AS postID, Users.id AS authorId, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, count(likes.userID) AS numberOfLike,  Users.name AS authorName, Users.username AS authorUsername, Users.avatar AS authorAvatar, Posts.createdAt, Posts.updatedAt FROM Posts
 			INNER JOIN Users ON Users.id = Posts.userID 
 			LEFT JOIN Likes ON Likes.postID = Posts.id
 			WHERE (Posts.viewMode = 'Everyone')
@@ -68,7 +68,24 @@ const getPostById = async (req, res) => {
 	const {item} = req;
 
 	try {
-		res.status(200).send(item)
+		const [result] = await sequelize.query(`
+		SELECT Posts.id AS postID, Users.id AS authorId, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, Users.name AS authorName, Users.username AS authorUsername, Users.avatar AS authorAvatar, Posts.createdAt, Posts.updatedAt FROM Posts
+					LEFT JOIN Users ON Users.id = Posts.userID 
+					WHERE Posts.id = ${item.id};
+		`);
+		const [result2] = await sequelize.query(`
+			SELECT Comments.id AS idComment, Comments.userID AS authorCommentId, Users.name AS authorNameLike, Users.username AS authorUsernameComment, Users.avatar AS authorAvatarComment, Comments.content AS contentComment, Comments.createdAt AS createdAtComment, Comments.updatedAt AS updatedAtComment FROM Comments
+			INNER JOIN Users ON Users.id = Comments.userID
+			WHERE Comments.postID = ${item.id}
+			ORDER BY updatedAtComment DESC
+		`)
+		const [result3] = await sequelize.query(`
+			SELECT Likes.id AS idLike, Likes.userID AS authorLikeId, Users.name AS authorNameLike, Users.username AS authorUsernameLike, Users.avatar AS authorAvatarLike, Likes.createdAt AS createdAtLike, Likes.updatedAt AS updatedAtLike FROM Likes
+			INNER JOIN Users ON Users.id = Likes.userID
+			WHERE Likes.postID = ${item.id}
+		`)
+		const post = {...result[0], comments: result2, likes: result3, numberComment: result2.length, numberLike: result3.length}
+		res.status(200).send(post);
 	} catch(err) {
 		res.status(500).send(err);
 	}
