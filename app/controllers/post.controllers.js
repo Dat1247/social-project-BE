@@ -74,7 +74,7 @@ const getPostById = async (req, res) => {
 					WHERE Posts.id = ${item.id};
 		`);
 		const [result2] = await sequelize.query(`
-			SELECT Comments.id AS idComment, Comments.userID AS authorCommentId, Users.name AS authorNameLike, Users.username AS authorUsernameComment, Users.avatar AS authorAvatarComment, Comments.content AS contentComment, Comments.createdAt AS createdAtComment, Comments.updatedAt AS updatedAtComment FROM Comments
+			SELECT Comments.id AS idComment, Comments.userID AS authorCommentId, Users.name AS authorNameComment, Users.username AS authorUsernameComment, Users.avatar AS authorAvatarComment, Comments.content AS contentComment, Comments.createdAt AS createdAtComment, Comments.updatedAt AS updatedAtComment FROM Comments
 			INNER JOIN Users ON Users.id = Comments.userID
 			WHERE Comments.postID = ${item.id}
 			ORDER BY updatedAtComment DESC
