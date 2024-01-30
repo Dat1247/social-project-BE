@@ -7,7 +7,8 @@ const {
 	updatePost,
 	getAllPosts,
 	changeStatusPost,
-	getPostById
+	getPostById,
+	testUpdate
 } = require("../controllers/post.controllers");
 const { authenticate } = require("../middlewares/auth/authenticate");
 const { uploadFile } = require("../middlewares/upload/uploadFile");
@@ -28,6 +29,6 @@ postRouter.delete(
 	checkIsYour,
 	deletePostById
 );
-postRouter.put("/change-status/:id", authenticate, checkExist(Post, "post"), checkIsYour, changeStatusPost)
+postRouter.put("/change-status/:id", authenticate, checkExist(Post, "post"), checkIsYour, changeStatusPost);
 
 module.exports = { postRouter };

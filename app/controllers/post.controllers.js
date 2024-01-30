@@ -114,38 +114,6 @@ const createPost = async (req, res) => {
 	}
 };
 
-const updatePost = async (req, res) => {
-	const {item, files} = req;
-	const { content, viewMode } = req.body;
-
-	const fileArray = []
-
-	try {
-		if (files.length > 0) {
-			files.forEach((file) => {
-				const pathName = `${file.destination}/${file.filename}`;
-				fileArray.push(pathName);
-			});
-		}
-
-		if(fileArray.length > 0) {
-			item.fileUpload = fileArray;
-		}
-		item.content = content;
-		item.viewMode = viewMode;
-
-		await item.save();
-
-		res.status(200).send({
-			message: "Update post successfully!",
-			data: item,
-		});
-	} catch (err) {
-		res.status(500).send("Update post failed!")
-	}
-
-}
-
 const deletePostById = async (req, res) => {
 	const { item, user } = req;
 
@@ -179,6 +147,38 @@ const changeStatusPost = async (req, res) => {
 	} catch (err) {
 		res.status(500).send("Can't change status of post!");
 	}
+}
+
+const updatePost = async (req, res) => {
+	const {item, files} = req;
+	const { content, viewMode, arrayFileUpload } = req.body;
+
+	let convertArrayFileUpload = arrayFileUpload.split(',')
+	try {
+		if (files.length > 0) {
+			files.forEach((file) => {
+				const pathName = `${file.destination}/${file.filename}`;
+				convertArrayFileUpload.push(pathName);
+			});
+		}
+
+		if(convertArrayFileUpload.length > 0) {
+			item.fileUpload = convertArrayFileUpload;
+		}
+
+		item.content = content;
+		item.viewMode = viewMode;
+
+		await item.save();
+
+		res.status(200).send({
+			message: "Update post successfully!",
+			data: item,
+		});
+	} catch (err) {
+		res.status(500).send({message:"Update post failed!", data: err})
+	}
+
 }
 
 module.exports = { createPost, deletePostById, getPosts, updatePost, getAllPosts, changeStatusPost, getPostById };
