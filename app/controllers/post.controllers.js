@@ -153,7 +153,8 @@ const updatePost = async (req, res) => {
 	const {item, files} = req;
 	const { content, viewMode, arrayFileUpload } = req.body;
 
-	let convertArrayFileUpload = arrayFileUpload.split(',')
+	let convertArrayFileUpload = arrayFileUpload !== "" ? arrayFileUpload.split(',') : [];
+	console.log({arrayFileUpload, convertArrayFileUpload})
 	try {
 		if (files.length > 0) {
 			files.forEach((file) => {
