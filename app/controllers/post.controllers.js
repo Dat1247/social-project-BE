@@ -1,4 +1,4 @@
-const { sequelize, Post, Comment } = require("../../models");
+const { sequelize, Post, Comment, Like } = require("../../models");
 const { Op } = require("sequelize");
 
 const getAllPosts = async (req, res) => {
@@ -118,6 +118,18 @@ const deletePostById = async (req, res) => {
 	const { item, user } = req;
 
 	try {
+		const [likesOfPost] = await sequelize.query(`
+			SELECT Likes.id AS idLike, Likes.userID AS authorLikeId, Users.name AS authorNameLike, Users.username AS authorUsernameLike, Users.avatar AS authorAvatarLike, Likes.createdAt AS createdAtLike, Likes.updatedAt AS updatedAtLike FROM Likes
+			INNER JOIN Users ON Users.id = Likes.userID
+			WHERE Likes.postID = ${item.id}
+		`);
+		for(let i = 0; i < likesOfPost.length; i++) {
+			await Like.destroy({
+				where: {
+					id: likesOfPost[i].idLike
+				}
+			});
+		};
 		await Post.destroy({
 			where: {
 				id: item.id,

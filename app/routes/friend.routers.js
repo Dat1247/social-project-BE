@@ -27,11 +27,11 @@ friendRouter.post(
 	sendFriendRequest
 );
 friendRouter.get(
-	"/get-friend-request-by-user-id",
+	"/get-friend-request-by-user-id/:userId",
 	authenticate,
 	getAllFriendRequestByUserSendId
 );
-friendRouter.get("/get-list-friend", authenticate, getListFriendByUserId);
+friendRouter.get("/get-list-friend/:userId", authenticate, getListFriendByUserId);
 friendRouter.delete("/delete-friend", authenticate, deleteFriend);
 friendRouter.put(
 	"/answer-request/:id",

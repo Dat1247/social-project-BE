@@ -24,7 +24,7 @@ const sendFriendRequest = async (req, res) => {
 };
 
 const getAllFriendRequestByUserSendId = async (req, res) => {
-	const { userId } = req.body;
+	const { userId } = req.params;
 	try {
 		const [result] = await sequelize.query(`
 		SELECT Friends.id AS requestID, Friends.userID AS userSendID, Friends.friendID AS userReceiveID, Friends.isFriend, Friends.createdAt, Friends.updatedAt,
@@ -44,7 +44,7 @@ const getAllFriendRequestByUserSendId = async (req, res) => {
 };
 
 const getListFriendByUserId = async (req, res) => {
-	const { userId } = req.body;
+	const { userId } = req.params;
 
 	try {
 		const [result] = await sequelize.query(`
