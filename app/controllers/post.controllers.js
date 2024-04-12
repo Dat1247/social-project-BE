@@ -54,11 +54,56 @@ const getPosts = async (req, res) => {
 
 		arrPost = [...result1, ...result2].sort((a,b) => {
 			return b.updatedAt - a.updatedAt;
-		})
+		});
 
 		newArrPost = await getCountCommentOfPost(arrPost, Comment);
 
-		res.status(200).send(newArrPost)
+		res.status(200).send(newArrPost);
+	} catch(err) {
+		res.status(500).send(err);
+	}
+}
+
+const getPostsPagination = async (req, res) => {
+	let arrPost = [];
+	let newArrPost = [];
+	const {cursor, limit} = req.body;
+
+	if(cursor < 1) {
+		res.status(500).send("Cursor must be greater than 0")
+	}
+
+	let cursorPost = (cursor - 1) * limit;
+	let limitPost = cursor * limit;
+
+	try {
+		const [result1] = await sequelize.query(`
+			SELECT Posts.id AS postID, Users.id AS Author_Id, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, count(likes.userID) AS numberOfLike,  Users.name AS authorName, Users.username AS authorUsername, Users.avatar AS authorAvatar, Posts.createdAt, Posts.updatedAt FROM Posts
+			INNER JOIN Friends AS friend
+			ON (friend.userID = "1" && friend.friendID = Posts.userID && friend.isFriend = '1' AND (Posts.viewMode = "Friend" || Posts.viewMode = "friends")) 
+			|| (friend.friendID = "1" && friend.userID = Posts.userID && friend.isFriend = '1' AND (Posts.viewMode = "Friend" || Posts.viewMode = "friends"))
+			INNER JOIN Users ON Users.id = Posts.userID
+			LEFT JOIN Likes ON Likes.postID = Posts.id
+			GROUP BY Posts.id;
+		`);
+
+		const [result2] = await sequelize.query(`
+			SELECT Posts.id AS postID, Users.id AS authorId, Posts.content AS content, Posts.fileUpload AS FileUpload, Posts.viewMode AS ViewMode, count(likes.userID) AS numberOfLike,  Users.name AS authorName, Users.username AS authorUsername, Users.avatar AS authorAvatar, Posts.createdAt, Posts.updatedAt FROM Posts
+			INNER JOIN Users ON Users.id = Posts.userID 
+			LEFT JOIN Likes ON Likes.postID = Posts.id
+			WHERE (Posts.viewMode = 'Everyone')
+			|| (Posts.viewMode = 'Only me' && Posts.userID = '1') 
+			|| ((Posts.viewMode = "Friend" || Posts.viewMode = "friends") && Posts.userID = '1')
+			GROUP BY Posts.id;
+		`);
+
+		arrPost = [...result1, ...result2].sort((a,b) => {
+			return b.updatedAt - a.updatedAt;
+		}).slice(cursorPost, limitPost);
+
+		newArrPost = await getCountCommentOfPost(arrPost, Comment);
+
+		res.status(200).send(newArrPost);
 	} catch(err) {
 		res.status(500).send(err);
 	}
@@ -194,4 +239,4 @@ const updatePost = async (req, res) => {
 
 }
 
-module.exports = { createPost, deletePostById, getPosts, updatePost, getAllPosts, changeStatusPost, getPostById };
+module.exports = { createPost, deletePostById, getPosts, updatePost, getAllPosts, changeStatusPost, getPostById, getPostsPagination };
